@@ -6,6 +6,7 @@ public class ChequePrintingServiceTests
 {
     [Theory]
     [InlineData(0.00, "ZERO DOLLARS")]
+    [InlineData(0.01, "ONE CENT")]
     [InlineData(0.04, "FOUR CENTS")]
     [InlineData(0.45, "FORTY-FIVE CENTS")]
 
