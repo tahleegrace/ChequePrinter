@@ -26,7 +26,7 @@ namespace ChequePrinter.API.Controllers
         /// Prints the specified value of currency in text version (e.g. 123.00 = one hundred and twenty-three dollars).
         /// </summary>
         [HttpPost("print")]
-        public string Print(decimal value)
+        public string Print([FromBody] decimal value)
         {
             return this._chequePrintingService.Print(value);
         }
