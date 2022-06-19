@@ -90,7 +90,7 @@ public class ChequePrintingServiceTests
     [InlineData(1_000_000_000_000.00, "ONE TRILLION DOLLARS")]
 
     [InlineData(1_000_000_000_000_000.00, "ONE QUADRILLION DOLLARS")]
-    public void TestChequePrinter(decimal number, string expectedResult)
+    public void TestChequePrinterReturnsCorrectTextForANumber(decimal number, string expectedResult)
     {
         var chequePrintingService = new ChequePrintingService();
         var result = chequePrintingService.Print(number);
