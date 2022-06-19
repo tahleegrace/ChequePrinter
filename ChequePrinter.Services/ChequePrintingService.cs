@@ -56,7 +56,7 @@
         };
 
         /// <summary>
-        /// Prints the specified currency in text version (e.g. one hundred and twenty-three dollars).
+        /// Prints the specified value of currency in text version (e.g. 123.00 = one hundred and twenty-three dollars).
         /// </summary>
         public string Print(decimal value)
         {
