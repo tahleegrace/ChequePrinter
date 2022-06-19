@@ -1,3 +1,4 @@
+using System;
 using Xunit;
 
 namespace ChequePrinter.Services.Tests;
@@ -59,6 +60,7 @@ public class ChequePrintingServiceTests
     [InlineData(115.00, "ONE HUNDRED AND FIFTEEN DOLLARS")]
     [InlineData(120.00, "ONE HUNDRED AND TWENTY DOLLARS")]
     [InlineData(123.00, "ONE HUNDRED AND TWENTY-THREE DOLLARS")]
+    [InlineData(123.45, "ONE HUNDRED AND TWENTY-THREE DOLLARS AND FORTY-FIVE CENTS")]
 
     [InlineData(1_000.00, "ONE THOUSAND DOLLARS")]
     [InlineData(1_100.00, "ONE THOUSAND ONE HUNDRED DOLLARS")]
@@ -96,5 +98,23 @@ public class ChequePrintingServiceTests
         var result = chequePrintingService.Print(number);
 
         Assert.Equal(expectedResult, result);
+    }
+
+    [Fact]
+    public void TestChequePrinterThrowsExceptionWhenNumberLessThanZero()
+    {
+        var chequePrintingService = new ChequePrintingService();
+        var exception = Assert.Throws<Exception>(() => chequePrintingService.Print(-1));
+
+        Assert.Equal("Cannot print negative cheques", exception.Message);
+    }
+
+    [Fact]
+    public void TestChequePrinterThrowsExceptionWhenNumberIs10ToThePowerOf18()
+    {
+        var chequePrintingService = new ChequePrintingService();
+        var exception = Assert.Throws<NotSupportedException>(() => chequePrintingService.Print(Convert.ToDecimal(Math.Pow(10, 18))));
+
+        Assert.Equal("Cannot print numbers greater than or equal to 10^18", exception.Message);
     }
 }

@@ -67,7 +67,7 @@
 
             if (value > Convert.ToDecimal(Math.Pow(10, 18) - 1))
             {
-                throw new NotSupportedException("Cannot print numbers greater than (10 ^ 18) - 1");
+                throw new NotSupportedException("Cannot print numbers greater than or equal to 10^18");
             }
 
             if (value == 0)
