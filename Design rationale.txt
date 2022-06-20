@@ -1,0 +1,46 @@
+Design rationale for the cheque printing application:
+-----------------------------------------------------
+I've chosen to use a loop structure to print a number. 
+
+The approach I'm using involves breaking a number into groups of 3 digits
+and converting these into text. The cents portion is broken up likewise 
+up to tenths of a cent. Fractions below tenths of a cent are ignored.
+
+For example with 12,345,678.912:
+1. Break the number into cents and dollars portions.
+   - Dollars portion: 12,345,678
+   - Cents portion: 0.912
+2. Work out the base 10 logarithm for the number. For 12,345,678 this is 7.
+3. Round the base 10 logarithm down to the nearest multiple of 3. This is 6.
+4. Work out how many numbers of 10 ^ 6 (1 million) fit into the number. This is 12.
+5. Print this number (TWELVE) using the instructions in Step 7 and the name for it's exponent (MILLION).
+6. Remove 12 million fron the number and store it (345,678).
+7. Repreat steps 2 to 7 until the remainder is less than 1 thousand and follow the following steps:
+   a. If the number is zero, return a blank string.
+   b. Otherwise, work out how many hundreds are in the number (678 - 6 hundreds) and print the respective text (SIX HUNDRED).
+   c. If the number is between 11 and 19 print the respective text for a teen number.
+   d. Work out how many tens are in the number (678 - 7 tens) and print the respective text (SEVENTY).
+   e. Work out how many ones are in the number (678 - 8 ones) and print the respective (EIGHT).
+8. Follow steps 7c - e for the cents portion.
+9. Follow step 7e for the tenths of a cent portion.
+10. Join the cents and dollars portions to produce a result (TWELVE MILLION THREE HUNDRED AND FORTY-FIVE THOUSAND SIX HUNDRED AND SEVENTY-EIGHT DOLLARS NINETY-ONE CENTS AND TWO TENTHS OF A CENT)
+
+I've chosen this approach as it represents how you would do this process on paper manually and is easily to understand from a logical and mathematical point of view.
+
+It is also easily extensible to larger (by adding additional exponents above 15) or smaller numbers (by adding additional methods for processing hundredths of a cent).
+
+I considered recursion as an alternative option for this solution, but opted against this as this would be harder to debug with larger numbers 
+(a call stack of 6 for a number above 1 quardrillion). Both recursion and loops have similar benefits in terms of code readability.
+
+For the API layer, I have chosen ASP.NET Core API. 
+
+I've chosen to implement this as an injectable service as this allows for the service to be easily mocked in controller unit tests. It allows for different implementations
+to be used instead without having to change the API controller layer. This becomes especially useful in production applications where you may need to switch one DB
+platform with another without to rebuild your entire system.
+I've also designed the class to be stateless. Multiple calls to the service will not cause side-effects.
+
+Other options for the API layer include:
+- Implementing the code directly in the API controller. This is not recommended as it does not allow the API specific functionality and cheque printing functionality
+  to be independently tested.
+- Creating a new instance of a ChequePrinter class in the API controller. This provides better separation of concerns between API specific functionality and cheque printing
+  functionality, however it does not allow mocks or different approaches of printing cheques (e.g. printing the cheque as $1234.56) to be easily into the class.
