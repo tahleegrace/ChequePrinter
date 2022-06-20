@@ -60,40 +60,39 @@
         /// </summary>
         public string Print(decimal value)
         {
-            if (value < 0)
-            {
-                throw new Exception("Cannot print negative cheques");
-            }
-
             if (value > Convert.ToDecimal(Math.Pow(10, 18)) - 1)
             {
                 throw new NotSupportedException("Cannot print numbers greater than or equal to 10^18");
             }
 
-            if (value == 0)
+            var valueToPrint = Math.Abs(value);
+
+            if (valueToPrint < 0.001m)
             {
                 return "ZERO DOLLARS";
             }
 
-            var centsPortion = value - Math.Truncate(value);
+            var centsPortion = valueToPrint - Math.Truncate(valueToPrint);
             var centsText = PrintCentsPortion(centsPortion);
 
-            var dollarsPortion = Convert.ToInt64(Math.Truncate(value));
+            var dollarsPortion = Convert.ToInt64(Math.Truncate(valueToPrint));
             var dollarsText = PrintDollarsPortion(dollarsPortion);
 
             var parts = new List<string>();
 
-            if (dollarsPortion > 0)
+            if (!String.IsNullOrEmpty(dollarsText))
             {
                 parts.Add(dollarsText);
             }
 
-            if (centsPortion > 0)
+            if (!String.IsNullOrEmpty(centsText))
             {
                 parts.Add(centsText);
             }
 
-            return String.Join(" AND ", parts);
+            var result = value < 0 ? "NEGATIVE " : String.Empty;
+            result += String.Join(" AND ", parts);
+            return result;
         }
 
         private string PrintDollarsPortion(long value)
@@ -134,15 +133,45 @@
 
         private string PrintCentsPortion(decimal value)
         {
-            if (value == 0)
+            if (value < 0.001m)
             {
                 return String.Empty;
             }
 
-            var suffix = value == 0.01m ? "CENT" : "CENTS";
-            var numberText = PrintNumberBelow100(Convert.ToInt64(Math.Truncate(value * 100)));
+            var numberOfCents = Convert.ToInt64(Math.Truncate(value * 100));
+            var suffix = numberOfCents == 1 ? "CENT" : "CENTS";
+            var centsPortion = numberOfCents * 0.01m;
+            var tenthsOfACentPortion = Math.Truncate((value - centsPortion) * 1000) * 0.001m;
 
-            return $"{numberText} {suffix}";
+            var centsText = PrintNumberBelow100(numberOfCents);
+            var tenthsOfACentText = PrintTenthsOfACentPortion(tenthsOfACentPortion);
+
+            var parts = new List<string>();
+
+            if (!String.IsNullOrEmpty(centsText))
+            {
+                parts.Add($"{centsText} {suffix}");
+            }
+
+            if (!String.IsNullOrEmpty(tenthsOfACentText))
+            {
+                parts.Add(tenthsOfACentText);
+            }
+
+            return String.Join(" AND ", parts);
+        }
+
+        private string PrintTenthsOfACentPortion(decimal value)
+        {
+            if (value < 0.001m)
+            {
+                return String.Empty;
+            }
+
+            var suffix = value == 0.001m ? "TENTH" : "TENTHS";
+            var numberText = digits[Convert.ToInt64(Math.Truncate(value * 1000))];
+
+            return $"{numberText} {suffix} OF A CENT";
         }
 
         private string PrintNumberBelow1000(long value)

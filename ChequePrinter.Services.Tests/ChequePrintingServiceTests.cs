@@ -6,10 +6,26 @@ namespace ChequePrinter.Services.Tests;
 public class ChequePrintingServiceTests
 {
     [Theory]
+    [InlineData(-0.01, "NEGATIVE ONE CENT")]
+    [InlineData(-0.45, "NEGATIVE FORTY-FIVE CENTS")]
+    [InlineData(-0.002, "NEGATIVE TWO TENTHS OF A CENT")]
+    [InlineData(-0.022, "NEGATIVE TWO CENTS AND TWO TENTHS OF A CENT")]
+    [InlineData(-1.00, "NEGATIVE ONE DOLLAR")]
+    [InlineData(-1.10, "NEGATIVE ONE DOLLAR AND TEN CENTS")]
+    [InlineData(-123.45, "NEGATIVE ONE HUNDRED AND TWENTY-THREE DOLLARS AND FORTY-FIVE CENTS")]
+
     [InlineData(0.00, "ZERO DOLLARS")]
     [InlineData(0.01, "ONE CENT")]
     [InlineData(0.04, "FOUR CENTS")]
     [InlineData(0.45, "FORTY-FIVE CENTS")]
+    [InlineData(0.0001, "ZERO DOLLARS")]
+    [InlineData(0.0011, "ONE TENTH OF A CENT")]
+    [InlineData(0.001, "ONE TENTH OF A CENT")]
+    [InlineData(0.002, "TWO TENTHS OF A CENT")]
+    [InlineData(0.011, "ONE CENT AND ONE TENTH OF A CENT")]
+    [InlineData(0.012, "ONE CENT AND TWO TENTHS OF A CENT")]
+    [InlineData(0.021, "TWO CENTS AND ONE TENTH OF A CENT")]
+    [InlineData(0.022, "TWO CENTS AND TWO TENTHS OF A CENT")]
 
     [InlineData(1.00, "ONE DOLLAR")]
     [InlineData(1.01, "ONE DOLLAR AND ONE CENT")]
@@ -20,8 +36,23 @@ public class ChequePrintingServiceTests
     [InlineData(1.15, "ONE DOLLAR AND FIFTEEN CENTS")]
     [InlineData(1.20, "ONE DOLLAR AND TWENTY CENTS")]
     [InlineData(1.23, "ONE DOLLAR AND TWENTY-THREE CENTS")]
+    [InlineData(1.001, "ONE DOLLAR AND ONE TENTH OF A CENT")]
+    [InlineData(1.002, "ONE DOLLAR AND TWO TENTHS OF A CENT")]
+    [InlineData(1.011, "ONE DOLLAR AND ONE CENT AND ONE TENTH OF A CENT")]
+    [InlineData(1.012, "ONE DOLLAR AND ONE CENT AND TWO TENTHS OF A CENT")]
+    [InlineData(1.021, "ONE DOLLAR AND TWO CENTS AND ONE TENTH OF A CENT")]
+    [InlineData(1.022, "ONE DOLLAR AND TWO CENTS AND TWO TENTHS OF A CENT")]
 
     [InlineData(2.00, "TWO DOLLARS")]
+    [InlineData(2.01, "TWO DOLLARS AND ONE CENT")]
+    [InlineData(2.23, "TWO DOLLARS AND TWENTY-THREE CENTS")]
+    [InlineData(2.001, "TWO DOLLARS AND ONE TENTH OF A CENT")]
+    [InlineData(2.002, "TWO DOLLARS AND TWO TENTHS OF A CENT")]
+    [InlineData(2.011, "TWO DOLLARS AND ONE CENT AND ONE TENTH OF A CENT")]
+    [InlineData(2.012, "TWO DOLLARS AND ONE CENT AND TWO TENTHS OF A CENT")]
+    [InlineData(2.021, "TWO DOLLARS AND TWO CENTS AND ONE TENTH OF A CENT")]
+    [InlineData(2.022, "TWO DOLLARS AND TWO CENTS AND TWO TENTHS OF A CENT")]
+
     [InlineData(3.00, "THREE DOLLARS")]
     [InlineData(4.00, "FOUR DOLLARS")]
     [InlineData(5.00, "FIVE DOLLARS")]
@@ -51,6 +82,7 @@ public class ChequePrintingServiceTests
     [InlineData(70.00, "SEVENTY DOLLARS")]
     [InlineData(80.00, "EIGHTY DOLLARS")]
     [InlineData(90.00, "NINETY DOLLARS")]
+    [InlineData(90.45, "NINETY DOLLARS AND FORTY-FIVE CENTS")]
 
     [InlineData(100.00, "ONE HUNDRED DOLLARS")]
     [InlineData(101.00, "ONE HUNDRED AND ONE DOLLARS")]
@@ -65,6 +97,7 @@ public class ChequePrintingServiceTests
     [InlineData(1_000.00, "ONE THOUSAND DOLLARS")]
     [InlineData(1_100.00, "ONE THOUSAND ONE HUNDRED DOLLARS")]
     [InlineData(1_123.00, "ONE THOUSAND ONE HUNDRED AND TWENTY-THREE DOLLARS")]
+    [InlineData(1_123.45, "ONE THOUSAND ONE HUNDRED AND TWENTY-THREE DOLLARS AND FORTY-FIVE CENTS")]
 
     [InlineData(10_000, "TEN THOUSAND DOLLARS")]
     [InlineData(10_100, "TEN THOUSAND ONE HUNDRED DOLLARS")]
@@ -98,15 +131,6 @@ public class ChequePrintingServiceTests
         var result = chequePrintingService.Print(number);
 
         Assert.Equal(expectedResult, result);
-    }
-
-    [Fact]
-    public void TestChequePrinterThrowsExceptionWhenNumberLessThanZero()
-    {
-        var chequePrintingService = new ChequePrintingService();
-        var exception = Assert.Throws<Exception>(() => chequePrintingService.Print(-1));
-
-        Assert.Equal("Cannot print negative cheques", exception.Message);
     }
 
     [Fact]
