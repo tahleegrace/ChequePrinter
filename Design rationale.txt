@@ -44,3 +44,5 @@ Other options for the API layer include:
   to be independently tested.
 - Creating a new instance of a ChequePrinter class in the API controller. This provides better separation of concerns between API specific functionality and cheque printing
   functionality, however it does not allow mocks or different approaches of printing cheques (e.g. printing the cheque as $1234.56) to be easily into the class.
+  
+React has been chosen for the UI, however Angular would have worked as well. React is good for component based UIs. Angular is good for CRUD based UIs.
