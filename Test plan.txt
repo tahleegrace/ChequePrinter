@@ -1,0 +1,23 @@
+Test plan for the Cheque Printing Application:
+----------------------------------------------
+I've chosen to use XUnit for unit testing the cheque printing application.
+This is my first time using XUnit for unit testing.
+
+I've chosen to use data-driven tests to allow a lot of test cases to be tested
+without duplicate code. This also allows new test cases to be added with 1 line of code.
+
+More detail about these tests can be found in the unit tests in the ChequePrinter.Services.Tests project.
+
+The unit test approach I've followed is:
+a. Test zero dollars.
+b. Test numbers with and without a cents portion (e.g. 0.04, 1.02)
+c. Test numbers with a half cent portion, cents portion and/or dollars portion (or any combination of these).
+d. Test plural and singular values for both dollars and cents portions (e.g. 1.00, 1.01, 1.02, 2.00, 2.01, 2.02).
+e. Test all digits from one to nine.
+f. Test all digits from eleven to nineteen.
+g. Test all multiples of 10 from 10 to 90.
+h. Test with one hundred.
+e. Test the powers of 10 divisible by 3 (thousand, million, billion, trillion, quadrillion).
+f. Test where the number is less than zero.
+g. Test with combinations of the above (e.g. 12,345,678; 99,888.77).
+h. Test where the number is greater than or equal to 10 to the power of 18 (should throw an exception).
